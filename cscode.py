@@ -38,22 +38,22 @@ if send:
     response_placeholder.write(response.text)
 
 
-# --- SECOND BLOCK: Valve Questions ---
+# --- SECOND BLOCK: Python Questions ---
 mychat_valve = chitti.chats.create(model="gemini-flash-lite-latest")
 response_placeholder_valve = st.empty()
 
+# The key="valve_question" here is what truly prevents the duplicate ID error
 question_valve = st.text_input(
     "", placeholder="Enter your Valve question here...", key="valve_question"
 )
 
-# Added a unique key to the columns to prevent layout-level ID duplication
-col1_py, col2_py, col3_py = st.columns([4, 1, 4], key="valve_cols")
+# Removed the invalid key argument from st.columns
+col1_py, col2_py, col3_py = st.columns([4, 1, 4])
 
 with col2_py:
     send_python = st.button("Send", key="valve_send")
 
 if send_python:
-    # Fixed the variable naming mismatch here
     final_question = question_valve + config.system_instruction
     response = mychat_valve.send_message(final_question)
     response_placeholder_valve.write(response.text)
