@@ -2,6 +2,7 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
+# Define your system instruction configuration
 config = types.GenerateContentConfig(
     system_instruction=""".You are an expert Valve Analyst and Strategist.
  Answer only questions related to Valve Technology.
@@ -10,6 +11,7 @@ config = types.GenerateContentConfig(
  Do not answer questions outside the valve domain."""
 )
 
+# Render the title header
 st.markdown(
     """
   <h1 style='text-align: center;'> VELAN INDIA's AI TOOL</h1>
@@ -20,40 +22,29 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Initialize the Gemini client
 chitti = genai.Client(api_key=st.secrets["API_KEY"])
 
-# --- FIRST BLOCK: Valve Questions ---
+# Initialize the chat session
 mychat = chitti.chats.create(model="gemini-flash-lite-latest")
+
+# Placeholder where the AI's response will appear
 response_placeholder = st.empty()
 
+# Single text input for the user
 question = st.text_input("", placeholder="Enter your Valve question here...")
 
+# Centered "Send" button layout
 col1, col2, col3 = st.columns([4, 1, 4])
 
 with col2:
     send = st.button("Send")
 
-if send:
-    response = mychat.send_message(question)
+# Handle the button click event
+if send and question:
+    # Append the system instruction constraints to the question
+    final_question = question + config.system_instruction
+    
+    # Send the message and display the output
+    response = mychat.send_message(final_question)
     response_placeholder.write(response.text)
-
-
-# --- SECOND BLOCK: Python Questions ---
-mychat_valve = chitti.chats.create(model="gemini-flash-lite-latest")
-response_placeholder_valve = st.empty()
-
-# The key="valve_question" here is what truly prevents the duplicate ID error
-question_valve = st.text_input(
-    "", placeholder="Enter your Valve question here...", key="valve_question"
-)
-
-# Removed the invalid key argument from st.columns
-col1_py, col2_py, col3_py = st.columns([4, 1, 4])
-
-with col2_py:
-    send_python = st.button("Send", key="valve_send")
-
-if send_python:
-    final_question = question_valve + config.system_instruction
-    response = mychat_valve.send_message(final_question)
-    response_placeholder_valve.write(response.text)
