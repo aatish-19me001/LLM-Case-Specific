@@ -23,7 +23,7 @@ mychat = chitti.chats.create(model="gemini-flash-lite-latest")
 #Placeholder for the response
 response_placeholder = st.empty()
 
-question = st.text_input("", placeholder="Enter your Python question here...")
+question = st.text_input("", placeholder="Enter your Valve question here...")
 
 col1, col2, col3 = st.columns([4, 1, 4])
 
@@ -33,7 +33,7 @@ if send:
   response = mychat.send_message(question)
   response_placeholder.write(response.text)
 
-mychat = robo.chats.create(model="gemini-flash-lite-latest")
+mychat = chitti.chats.create(model="gemini-flash-lite-latest")
 #Placeholder for the response
 response_placeholder = st.empty()
 
